@@ -1,0 +1,69 @@
+static bool isValidStringLINQ(string str)
+	{
+
+		foreach(int c in str.ToCharArray() )
+		{
+			if(!(c >= 97 & c <= 122))
+			{
+				Console.WriteLine("not a valid Alpahabet");
+				return false;
+			}
+		}
+		
+		var list = str.ToCharArray();
+		var grouped = list
+			.GroupBy(s => s)
+			.Select(g => new { Symbol = g.Key, Apperance = g.Count() });
+
+		
+		Dictionary<int, int> dict = new Dictionary<int, int>();
+		
+		List<int> uniqueCounter  = grouped.Select(obj => obj.Apperance).Distinct().ToList();
+		string strAlpa = string.Empty;
+		var groupedList = grouped.ToList();
+		foreach (var freq in uniqueCounter)
+		{
+			int frequencyCount = 1;
+
+			foreach (var item in groupedList)
+			{
+				if (item.Apperance == freq && !dict.ContainsKey(item.Apperance))
+				{
+					dict.Add(item.Apperance, frequencyCount++);
+
+				}
+				else if (item.Apperance == freq && dict.ContainsKey(item.Apperance))
+				{
+					dict[item.Apperance] = frequencyCount++;
+
+				}
+
+			}
+			// the number of alpabets found 
+		}
+
+		if (dict.Count > 2)
+		{
+			return false;
+
+		}
+		// minium allowed
+		else if (dict.Count == 2)
+		{
+			var existing1 = dict.ElementAt(0).Value;
+			var existing2 = dict.ElementAt(1).Value;
+			if(existing1 == 1 && existing2 > 1)
+			{
+				return false;
+			}
+			if (existing1 > 1 && existing2 > 1)
+			{
+				return false;
+			}
+
+		}
+
+		return true;
+
+
+	}
